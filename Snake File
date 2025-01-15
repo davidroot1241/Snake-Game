@@ -1,0 +1,56 @@
+10 REM Snake Game in BASIC
+20 CLS
+30 DIM SnakeX(100), SnakeY(100)
+40 SnakeLength = 1
+50 Direction = 1
+60 Score = 0
+70 REM Initialize Snake position
+80 SnakeX(1) = 10
+90 SnakeY(1) = 10
+100 REM Initialize food position
+110 FoodX = INT(RND * 20) + 1
+120 FoodY = INT(RND * 20) + 1
+130 REM Draw initial game screen
+140 FOR i = 1 TO 20
+150   PRINT "-" ;
+160 NEXT i
+170 PRINT "|";
+180 FOR y = 1 TO 20
+190   FOR x = 1 TO 20
+200     IF x = SnakeX(1) AND y = SnakeY(1) THEN PRINT "O";
+210     IF x = FoodX AND y = FoodY THEN PRINT "*";
+220     IF x <> SnakeX(1) OR y <> SnakeY(1) THEN PRINT " ";
+230   NEXT x
+240   PRINT "|";
+250 NEXT y
+260 REM Get user input
+270 IF INKEY$ = "w" AND Direction <> 2 THEN Direction = 1 REM Up
+280 IF INKEY$ = "s" AND Direction <> 1 THEN Direction = 2 REM Down
+290 IF INKEY$ = "a" AND Direction <> 4 THEN Direction = 3 REM Left
+300 IF INKEY$ = "d" AND Direction <> 3 THEN Direction = 4 REM Right
+310 REM Move Snake
+320 FOR i = SnakeLength TO 2 STEP -1
+330   SnakeX(i) = SnakeX(i - 1)
+340   SnakeY(i) = SnakeY(i - 1)
+350 NEXT i
+360 IF Direction = 1 THEN SnakeY(1) = SnakeY(1) - 1 REM Move Up
+370 IF Direction = 2 THEN SnakeY(1) = SnakeY(1) + 1 REM Move Down
+380 IF Direction = 3 THEN SnakeX(1) = SnakeX(1) - 1 REM Move Left
+390 IF Direction = 4 THEN SnakeX(1) = SnakeX(1) + 1 REM Move Right
+400 REM Check wall collisions
+410 IF SnakeX(1) < 1 OR SnakeX(1) > 20 OR SnakeY(1) < 1 OR SnakeY(1) > 20 THEN GOTO 500
+420 REM Check self collision
+430 FOR i = 2 TO SnakeLength
+440   IF SnakeX(1) = SnakeX(i) AND SnakeY(1) = SnakeY(i) THEN GOTO 500
+450 NEXT i
+460 REM Check if the snake eats food
+470 IF SnakeX(1) = FoodX AND SnakeY(1) = FoodY THEN
+480   SnakeLength = SnakeLength + 1
+490   Score = Score + 1
+500   REM Randomly place new food
+510   FoodX = INT(RND * 20) + 1
+520   FoodY = INT(RND * 20) + 1
+530 GOTO 130
+540 REM Game Over
+550 PRINT "Game Over! Final Score: "; Score
+560 END
